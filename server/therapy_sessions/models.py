@@ -13,6 +13,10 @@ class Patient(models.Model):
     email = models.EmailField()
     name = models.CharField(max_length=60)
 
+    @classmethod
+    def get_by_id(cls, id: int) -> 'Patient':
+        return cls.objects.get(id=id)
+
 
 class Session(models.Model):
     fee = models.DecimalField(decimal_places=2, max_digits=10)
@@ -29,7 +33,7 @@ class Session(models.Model):
     @classmethod
     def create(cls, data: SessionCreateData) -> 'Session':
         """Creates a Session instance."""
-        assert data['fee'] > 0
+        assert float(data['fee']) > 0
 
         return cls.objects.create(
             therapist=data['therapist'],

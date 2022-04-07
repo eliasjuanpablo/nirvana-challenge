@@ -1,29 +1,12 @@
 from django.test import TestCase
 
 from therapy_sessions.exceptions import PaymentTooHighException
-from therapy_sessions.models import Patient, Session, Therapist
-
-
-def patient_factory() -> Patient:
-    return Patient.objects.create(
-        email='test@test.com',
-        name='Test Patient',
-    )
-
-
-def therapist_factory() -> Therapist:
-    return Therapist.objects.create(
-        email='test@test.com',
-        name='Test Therapist',
-    )
-
-
-def session_factory(patient, therapist) -> Session:
-    return Session.create({
-        'patient': patient,
-        'therapist': therapist,
-        'fee': 200,
-    })
+from therapy_sessions.models import Session
+from therapy_sessions.tests.utils import (
+    patient_factory,
+    session_factory,
+    therapist_factory,
+)
 
 
 class TherapySessionTests(TestCase):
