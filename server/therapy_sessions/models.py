@@ -33,7 +33,7 @@ class Session(models.Model):
     @classmethod
     def create(cls, data: SessionCreateData) -> 'Session':
         """Creates a Session instance."""
-        assert float(data['fee']) > 0
+        assert data['fee'] > 0
 
         return cls.objects.create(
             therapist=data['therapist'],
@@ -41,8 +41,15 @@ class Session(models.Model):
             fee=data['fee'],
         )
 
+    @classmethod
+    def get_by_id(cls, id: int) -> 'Session':
+        return cls.objects.get(id=id)
+
     def add_payment(self, amount: float) -> 'Payment':
         """Create a Payment instance for this session."""
+
+        assert amount > 0
+
         already_paid = self.payments.aggregate(
             sum=models.Sum('amount')
         )["sum"] or 0

@@ -1,10 +1,10 @@
 from django.http import JsonResponse
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.views import APIView
 from therapy_sessions.exceptions import DomainException
 
 from therapy_sessions.models import Session, Therapist, Patient
-from therapy_sessions.serializers import CreateSessionSerializer, SessionSerializer
+from therapy_sessions.serializers import CreateSessionSerializer, PaymentSerializer, SessionSerializer
 
 
 def get_current_therapist(request):
@@ -27,11 +27,27 @@ class CreateSessionView(APIView):
             session = Session.create({
                 'patient': patient,
                 'therapist': therapist,
-                'fee': data['fee'],
+                'fee': float(data['fee']),
             })
         except (AssertionError, DomainException):
             raise ValidationError()
+        except Session.DoesNotExist:
+            raise NotFound()
 
         output_serializer = SessionSerializer(session)
 
+        return JsonResponse(output_serializer.data, status=201)
+
+
+class AddPaymentView(APIView):
+    def post(self, request, id):
+        try:
+            session = Session.get_by_id(id)
+            payment = session.add_payment(float(request.data['amount']))
+        except AssertionError:
+            raise ValidationError()
+        except Session.DoesNotExist:
+            raise NotFound()
+
+        output_serializer = PaymentSerializer(payment)
         return JsonResponse(output_serializer.data, status=201)
