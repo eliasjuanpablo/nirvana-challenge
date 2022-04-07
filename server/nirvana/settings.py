@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-37r%)cc@-ssl&ev*vi%4v5yej&41ow*hw8+u89rw401pfk@t@7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    # 'localhost',
+    # '0.0.0.0',
+    '*',
+]
 
 
 # Application definition
@@ -130,6 +134,4 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+CORS_ORIGIN_ALLOW_ALL = True
