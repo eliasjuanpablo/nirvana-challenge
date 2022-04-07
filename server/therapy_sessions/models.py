@@ -1,5 +1,7 @@
 from django.db import models
 
+from therapy_sessions.types import SessionCreateData
+
 
 class Therapist(models.Model):
     email = models.EmailField()
@@ -22,6 +24,16 @@ class Session(models.Model):
         'therapy_sessions.Patient',
         on_delete=models.PROTECT,
     )
+
+    @classmethod
+    def create(cls, data: SessionCreateData) -> 'Session':
+        assert data['fee'] > 0
+
+        return cls.objects.create(
+            therapist=data['therapist'],
+            patient=data['patient'],
+            fee=data['fee'],
+        )
 
 
 class Payment(models.Model):
