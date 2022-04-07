@@ -14,6 +14,9 @@ class Therapist(models.Model):
         # NOTE: currently not being scoped, for now will just return all patients 
         return Patient.objects.all()
 
+    def get_sessions(self) -> list['Session']:
+        return Session.objects.filter(therapist=self).order_by('-created_at')
+
 class Patient(models.Model):
     email = models.EmailField()
     name = models.CharField(max_length=60)

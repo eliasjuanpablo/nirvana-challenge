@@ -14,7 +14,15 @@ def get_current_therapist(request):
     return Therapist.objects.first()
 
 
-class CreateSessionView(APIView):
+class ListCreateSession(APIView):
+    def get(self, request):
+        therapist = get_current_therapist(request)
+        sessions = therapist.get_sessions()
+
+        output_serializer = SessionSerializer(sessions, many=True)
+
+        return JsonResponse(output_serializer.data, status=200, safe=False)
+
     def post(self, request):
         try:
             input_serializer = CreateSessionSerializer(data=request.data)

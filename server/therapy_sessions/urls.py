@@ -1,13 +1,13 @@
 from django.urls import path
 
-from therapy_sessions.views import AddPaymentView, CreateSessionView, PatientsView
+from therapy_sessions.views import AddPaymentView, ListCreateSession, PatientsView
 
 
 urlpatterns = [
     path(
         "api/v1/sessions/",
-        CreateSessionView.as_view(),
-        name="create-session",
+        ListCreateSession.as_view(),
+        name="list-create-session",
     ),
     path(
         "api/v1/sessions/<int:id>/payments",
