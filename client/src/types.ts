@@ -10,7 +10,7 @@ export type Therapist = {
 
 export type Session = {
   id: number;
-  date: Date;
+  created_at: string;
   patient: Patient;
   fee: number;
 };

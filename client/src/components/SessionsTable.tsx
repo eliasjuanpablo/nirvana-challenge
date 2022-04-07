@@ -7,6 +7,11 @@ type SessionsTableProps = {
   sessions: Session[];
 };
 
+function formatDate(date: string): string {
+  const dateInstance = new Date(date);
+  return dateInstance.toISOString().substring(0, 10);
+}
+
 export function SessionsTable(props: SessionsTableProps) {
   const { sessions } = props;
 
@@ -21,10 +26,10 @@ export function SessionsTable(props: SessionsTableProps) {
         </tr>
       </thead>
       <tbody>
-        {sessions.map(({ date, patient, fee }, index) => {
+        {sessions.map(({ created_at, patient, fee }, index) => {
           return (
             <tr key={index}>
-              <td>{date.toISOString()}</td>
+              <td>{formatDate(created_at)}</td>
               <td>{patient.name}</td>
               <td>{fee}</td>
               <td>
