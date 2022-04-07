@@ -1,17 +1,18 @@
+from random import random
 from therapy_sessions.models import Patient, Session, Therapist
 
 
 def patient_factory() -> Patient:
     return Patient.objects.create(
         email='test@test.com',
-        name='Test Patient',
+        name='Test Patient' + str(random()),
     )
 
 
 def therapist_factory() -> Therapist:
     return Therapist.objects.create(
         email='test@test.com',
-        name='Test Therapist',
+        name='Test Therapist' + str(random()),
     )
 
 

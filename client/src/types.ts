@@ -1,4 +1,5 @@
 export type Patient = {
+  id: number;
   name: string;
   email: string;
 };
@@ -14,3 +15,5 @@ export type Session = {
   patient: Patient;
   fee: number;
 };
+
+export type SessionCreationData = Pick<Session, "fee" | "patient">;
