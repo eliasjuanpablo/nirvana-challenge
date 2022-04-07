@@ -52,7 +52,7 @@ class AddPaymentView(APIView):
         try:
             session = Session.get_by_id(id)
             payment = session.add_payment(float(request.data['amount']))
-        except AssertionError:
+        except (AssertionError, DomainException):
             raise ValidationError()
         except Session.DoesNotExist:
             raise NotFound()
