@@ -17,3 +17,11 @@ export type Session = {
 };
 
 export type SessionCreationData = Pick<Session, "fee" | "patient">;
+
+export type Payment = {
+  amount: number;
+  date: string;
+  session: number;
+};
+
+export type PaymentCreationData = Pick<Payment, "amount" | "session">;

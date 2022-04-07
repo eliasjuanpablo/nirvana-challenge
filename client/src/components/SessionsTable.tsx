@@ -2,18 +2,15 @@ import { Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 
 import { Session } from "../types";
+import { formatDate } from "../utils";
 
 type SessionsTableProps = {
   sessions: Session[];
+  onAddPayment: (session: Session) => void;
 };
 
-function formatDate(date: string): string {
-  const dateInstance = new Date(date);
-  return dateInstance.toISOString().substring(0, 10);
-}
-
 export function SessionsTable(props: SessionsTableProps) {
-  const { sessions } = props;
+  const { sessions, onAddPayment } = props;
 
   return (
     <Table striped bordered hover>
@@ -26,14 +23,22 @@ export function SessionsTable(props: SessionsTableProps) {
         </tr>
       </thead>
       <tbody>
-        {sessions.map(({ created_at, patient, fee }, index) => {
+        {sessions.map((session, index) => {
+          const { created_at, patient, fee } = session;
           return (
             <tr key={index}>
               <td>{formatDate(created_at)}</td>
               <td>{patient.name}</td>
               <td>{fee}</td>
               <td>
-                <Button variant="primary">Add payment</Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    onAddPayment(session);
+                  }}
+                >
+                  Add payment
+                </Button>
               </td>
             </tr>
           );

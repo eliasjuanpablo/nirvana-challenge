@@ -4,11 +4,11 @@ import {
   useQuery,
   UseQueryResult,
 } from "react-query";
-import { addSession, fetchPatients, fetchSessions } from "../api";
-import { Patient, Session } from "../types";
+import { addPayment, addSession, fetchPatients, fetchSessions } from "../api";
+import { Patient, Payment, Session } from "../types";
 
 export function useSessions(): UseQueryResult<Session[], Error> {
-  return useQuery("fetchSessions", fetchSessions);
+  return useQuery("fetchSessions", fetchSessions, { cacheTime: 0 });
 }
 
 export function usePatients(): UseQueryResult<Patient[], Error> {
@@ -17,4 +17,8 @@ export function usePatients(): UseQueryResult<Patient[], Error> {
 
 export function useAddSession(): UseMutationResult<Session, Error> {
   return useMutation((payload: any) => addSession(payload));
+}
+
+export function useAddPayment(): UseMutationResult<Payment, Error> {
+  return useMutation((payload: any) => addPayment(payload));
 }

@@ -1,4 +1,10 @@
-import { Patient, Session, SessionCreationData } from "./types";
+import {
+  Patient,
+  Payment,
+  PaymentCreationData,
+  Session,
+  SessionCreationData,
+} from "./types";
 import axios from "./axios";
 
 export function fetchSessions(): Promise<Session[]> {
@@ -15,5 +21,14 @@ export function addSession(payload: SessionCreationData): Promise<Session> {
       ...payload,
       patient_id: payload.patient.id,
     })
+    .then(({ data }) => data);
+}
+
+export function addPayment({
+  session,
+  amount,
+}: PaymentCreationData): Promise<Payment> {
+  return axios
+    .post(`/api/v1/sessions/${session}/payments/`, { amount })
     .then(({ data }) => data);
 }
