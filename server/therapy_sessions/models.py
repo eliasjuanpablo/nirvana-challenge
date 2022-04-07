@@ -8,6 +8,11 @@ class Therapist(models.Model):
     email = models.EmailField()
     name = models.CharField(max_length=60)
 
+    def get_patients(self) -> list['Patient']:
+        """Gets therapist's eligible patients."""
+
+        # NOTE: currently not being scoped, for now will just return all patients 
+        return Patient.objects.all()
 
 class Patient(models.Model):
     email = models.EmailField()

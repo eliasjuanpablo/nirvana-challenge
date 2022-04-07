@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from therapy_sessions.models import Payment, Session
+from therapy_sessions.models import Payment, Patient, Session
 
 
 class CreateSessionSerializer(serializers.ModelSerializer):
@@ -26,4 +26,10 @@ class AddPaymentSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
+        fields = '__all__'
+
+
+class PatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient
         fields = '__all__'

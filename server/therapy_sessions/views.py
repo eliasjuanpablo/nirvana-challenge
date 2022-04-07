@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from therapy_sessions.exceptions import DomainException
 
 from therapy_sessions.models import Session, Therapist, Patient
-from therapy_sessions.serializers import CreateSessionSerializer, PaymentSerializer, SessionSerializer
+from therapy_sessions.serializers import CreateSessionSerializer, PatientSerializer, PaymentSerializer, SessionSerializer
 
 
 def get_current_therapist(request):
@@ -51,3 +51,12 @@ class AddPaymentView(APIView):
 
         output_serializer = PaymentSerializer(payment)
         return JsonResponse(output_serializer.data, status=201)
+
+
+class PatientsView(APIView):
+    def get(self, request):
+        therapist = get_current_therapist(request)
+        patients = therapist.get_patients()
+        output_serializer = PatientSerializer(patients, many=True)
+
+        return JsonResponse(output_serializer.data, status=200, safe=False)
