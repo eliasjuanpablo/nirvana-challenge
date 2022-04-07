@@ -1,5 +1,6 @@
 from django.db import models
 
+from therapy_sessions.exceptions import PaymentTooHighException
 from therapy_sessions.types import SessionCreateData
 
 
@@ -27,12 +28,27 @@ class Session(models.Model):
 
     @classmethod
     def create(cls, data: SessionCreateData) -> 'Session':
+        """Creates a Session instance."""
         assert data['fee'] > 0
 
         return cls.objects.create(
             therapist=data['therapist'],
             patient=data['patient'],
             fee=data['fee'],
+        )
+
+    def add_payment(self, amount: float) -> 'Payment':
+        """Create a Payment instance for this session."""
+        already_paid = self.payments.aggregate(
+            sum=models.Sum('amount')
+        )["sum"] or 0
+
+        if amount > self.fee - already_paid:
+            raise PaymentTooHighException()
+
+        return Payment.objects.create(
+            amount=amount,
+            session=self,
         )
 
 
@@ -42,4 +58,5 @@ class Payment(models.Model):
     session = models.ForeignKey(
         'therapy_sessions.Session',
         on_delete=models.PROTECT,
+        related_name="payments"
     )

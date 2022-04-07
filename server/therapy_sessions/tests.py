@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from therapy_sessions.exceptions import PaymentTooHighException
 from therapy_sessions.models import Patient, Session, Therapist
 
 
@@ -15,6 +16,14 @@ def therapist_factory() -> Therapist:
         email='test@test.com',
         name='Test Therapist',
     )
+
+
+def session_factory(patient, therapist) -> Session:
+    return Session.create({
+        'patient': patient,
+        'therapist': therapist,
+        'fee': 200,
+    })
 
 
 class TherapySessionTests(TestCase):
@@ -44,3 +53,35 @@ class TherapySessionTests(TestCase):
                 'therapist': self.therapist,
                 'fee': fee,
             })
+
+    def test_session_full_payment(self):
+        session = session_factory(self.patient, self.therapist)
+
+        result = session.add_payment(session.fee)
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result.session, session)
+
+    def test_session_several_valid_payments(self):
+        session = session_factory(self.patient, self.therapist)
+
+        session.add_payment(session.fee / 2)
+        session.add_payment(session.fee / 2)
+
+        self.assertEqual(
+            len(session.payments.all()),
+            2,
+        )
+
+    def test_payment_higher_than_fee(self):
+        session = session_factory(self.patient, self.therapist)
+
+        with self.assertRaises(PaymentTooHighException):
+            session.add_payment(session.fee + 100)
+
+    def test_partial_payments_higher_tan_fee(self):
+        session = session_factory(self.patient, self.therapist)
+        session.add_payment(session.fee)
+
+        with self.assertRaises(PaymentTooHighException):
+            session.add_payment(100)
